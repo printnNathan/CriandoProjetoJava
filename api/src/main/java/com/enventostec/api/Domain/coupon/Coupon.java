@@ -1,5 +1,5 @@
-package com.enventos.api.Domain.coupon;
-import com.enventos.api.Domain.event.Event;
+package com.enventostec.api.Domain.coupon;
+import com.enventostec.api.Domain.event.Event;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

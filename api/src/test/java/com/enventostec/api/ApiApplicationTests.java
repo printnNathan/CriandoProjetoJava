@@ -1,4 +1,4 @@
-package com.enventos.api;
+package com.enventostec.api;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,4 +1,4 @@
-package com.enventos.api.Domain.event;
+package com.enventostec.api.Domain.event;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,6 +1,6 @@
-package com.enventos.api.repositories;
+package com.enventostec.api.repositories;
 
-import com.enventos.api.Domain.address.Address;
+import com.enventostec.api.Domain.address.Address;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;

@@ -1,6 +1,6 @@
-package com.enventos.api.Domain.address;
+package com.enventostec.api.Domain.address;
 
-import com.enventos.api.Domain.event.Event;
+import com.enventostec.api.Domain.event.Event;
 import jakarta.persistence.*;
 
 import java.util.UUID;
