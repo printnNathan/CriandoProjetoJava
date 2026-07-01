@@ -1,12 +1,20 @@
 package com.enventostec.api.Domain.address;
-
 import com.enventostec.api.Domain.event.Event;
 import jakarta.persistence.*;
-
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import java.util.UUID;
+
+
 
 @Table(name = "address")
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Address {
     @Id
     @GeneratedValue

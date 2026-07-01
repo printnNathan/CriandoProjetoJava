@@ -1,4 +1,6 @@
 package com.enventostec.api.Domain.event;
+import com.amazonaws.services.guardduty.model.City;
+import com.enventostec.api.Domain.address.Address;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,11 +20,15 @@ public class Event {
     @Id
     @GeneratedValue
     private UUID id;
+
     private String title;
     private String description;
     private String imgUrl;
     private String eventUrl;
     private Boolean remote;
     private Date date;
+
+    @OneToOne(mappedBy = "event", cascade = CascadeType.ALL)
+    private Address address;
 
 }

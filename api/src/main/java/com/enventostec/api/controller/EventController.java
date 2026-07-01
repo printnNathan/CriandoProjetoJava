@@ -5,11 +5,13 @@ import com.enventostec.api.Domain.event.EventRequestDTO;
 import com.enventostec.api.Domain.event.EventResponseDTO;
 import com.enventostec.api.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -37,5 +39,18 @@ public class EventController {
     public ResponseEntity<List<EventResponseDTO>> getUpcomingEvents(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size){
         List<EventResponseDTO> allEvent = this.eventService.getUpcomingEvents(page, size);
         return ResponseEntity.ok(allEvent);
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<EventResponseDTO>> filterEvent(@RequestParam(defaultValue = "0") int page,
+                                                              @RequestParam(defaultValue = "10") int size,
+                                                              @RequestParam(required = false) String title,
+                                                              @RequestParam(required = false) String city,
+                                                              @RequestParam(required = false) String uf,
+                                                              @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+                                                              @RequestParam(required = false ) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate){
+    List<EventResponseDTO> events = eventService.getFilteredEvents(page, size, title, city, uf, startDate, endDate);
+    return ResponseEntity.ok(events);
+
     }
 }
