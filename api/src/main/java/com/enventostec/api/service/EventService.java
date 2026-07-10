@@ -1,6 +1,8 @@
 package com.enventostec.api.service;
 import com.amazonaws.services.s3.AmazonS3;
+import com.enventostec.api.Domain.coupon.Coupon;
 import com.enventostec.api.Domain.event.Event;
+import com.enventostec.api.Domain.event.EventDetailsDTO;
 import com.enventostec.api.Domain.event.EventRequestDTO;
 import com.enventostec.api.Domain.event.EventResponseDTO;
 import com.enventostec.api.repositories.EventRepository;
@@ -18,6 +20,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.stream;
 
@@ -32,7 +35,12 @@ public class EventService {
 
     @Autowired
     private EventRepository repository;
+
+    @Autowired
     private AddressService addressService;
+
+    @Autowired
+    private CouponService couponService;
 
 
     public Event createEvent(EventRequestDTO data){
@@ -78,8 +86,16 @@ public class EventService {
     }
 
     public List<EventResponseDTO> getFilteredEvents(int page, int size, String title, String city, String uf, Date startDate, Date endDate){
+
+        title = (title != null) ? title : "";
+        city = (city != null) ? city : "";
+        uf = (uf != null) ? uf : "";
+        startDate = (startDate != null) ? startDate : new Date(0);
+        endDate = (endDate != null) ? endDate : new Date();
+
         Pageable pageable = PageRequest.of(page, size);
-        Page<Event> eventsPage = this.repository.findFilteredEvents(new Date(), title, city, uf, startDate, endDate, pageable);
+
+        Page<Event> eventsPage = this.repository.findFilteredEvents(title, city, uf, startDate, endDate, pageable);
         return eventsPage.map(event -> new EventResponseDTO(
                         event.getId(),
                         event.getTitle(),
@@ -118,4 +134,32 @@ public class EventService {
         return convFile;
 
     }
-}
+
+    public EventDetailsDTO getEventDetails(UUID eventId) {
+        Event event = repository.findById(eventId)
+                .orElseThrow(() -> new IllegalArgumentException("Event not found"));
+
+        List<Coupon> coupons = couponService.consultCoupons(eventId, new Date());
+
+        List<EventDetailsDTO.CouponDTO> couponDTOs = coupons.stream()
+                .map(coupon -> new EventDetailsDTO.CouponDTO(
+                        coupon.getCode(),
+                        coupon.getDiscount(),
+                        coupon.getValid()))
+                .collect(Collectors.toList());
+
+        return new EventDetailsDTO(
+                event.getId(),
+                event.getTitle(),
+                event.getDescription(),
+                event.getDate(),
+                event.getAddress() != null ? event.getAddress().getCity() : "",
+                event.getAddress() != null ? event.getAddress().getUf() : "",
+                event.getImgUrl(),
+                event.getEventUrl(),
+                couponDTOs);
+    }
+
+
+    }
+
